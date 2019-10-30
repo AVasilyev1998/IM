@@ -3,6 +3,11 @@ from Objects.film import Film
 
 
 class Ticket(object):
+    """
+    Билет
+    - фильм
+    - цена билета
+    """
     def __init__(self, ticket_film: Film, price):
         self.film = ticket_film
         self.price = price
@@ -12,6 +17,10 @@ class Ticket(object):
 
 
 class TicketOffice(object):
+    """
+    Касса
+    - билеты
+    """
     def __init__(self, tickets: list):
         self.tickets = tickets
 
