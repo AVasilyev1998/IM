@@ -3,7 +3,7 @@ import datetime
 
 class Film(object):
     """
-    Фильм ;
+    Фильм
     - name -  название
     - end_date - дата окончания проката DD-MM-YY
     - duration - продолжительность HH-MM
