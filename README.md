@@ -1,1 +1,3 @@
-# IM
+# Immitation modeling
+
+## Курсовая работа
