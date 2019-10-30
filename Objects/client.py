@@ -1,5 +1,5 @@
 import random
-
+from utils.random_mod import random_with_chance
 
 class Client(object):
     """
@@ -9,19 +9,19 @@ class Client(object):
     - предпочтения по закускам -> boolean  1 or 0
     - предпочтения по напиткам -> boolean 1 or 0
     """
-    def __init__(self, id, films, food_preferense, drink_preference):
+    def __init__(self, id, films):
         # self.id = hash()
         if isinstance(films, list):
             self.films = films
         else:
             raise TypeError
 
-        self.food_preferense = random.randint(0, 100)
-        self.drink_preference = random.randint(0, 100)
+        self.food_preferense = random_with_chance(30)
+        self.drink_preference = random_with_chance(40)
 
     def __repr__(self):
         return f' films:{self.films} / food: {self.food_preferense} / drink: {self.drink_preference}'
 
 if __name__ == '__main__':
-    client = Client(1, ['1', '2', '3'], 1,2)
+    client = Client(1, ['1', '2', '3'])
     print(client)

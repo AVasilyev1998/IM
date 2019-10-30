@@ -18,8 +18,8 @@ if __name__ == '__main__':
     nuls = 0
     ones = 0
     for i in range(10):
-        if random_with_chance(45):
-            nuls += 1
-        else:
+        if random_with_chance(20):
             ones += 1
+        else:
+            nuls += 1
     print(f'nuls: {nuls} | ones: {ones}')
