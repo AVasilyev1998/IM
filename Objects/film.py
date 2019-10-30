@@ -1,4 +1,5 @@
 import datetime
+from Objects.cinema_hall import CinemaHall
 
 
 class Film(object):
@@ -12,6 +13,7 @@ class Film(object):
         self.name = name if isinstance(name, str) else None
         self.end_date = end_date if isinstance(end_date, str) else None
         self.duration = duration if isinstance(duration, str) else None
+        self.hall = None
         # TODO: дописать поля статистики
 
     def __repr__(self):
