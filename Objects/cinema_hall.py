@@ -1,4 +1,5 @@
 import datetime
+from Objects.film import Film
 
 
 class CinemaHall(object):
@@ -33,5 +34,7 @@ if __name__ == '__main__':
     # Задать очередь фильмов, благодаря которой можем загружать сеансы 
     # пока добавил только 1 фильм
     film = Film('33 разбойника', datetime.datetime.now().strftime('%d/%m/%y'), '1:20')
-    hall = CinemaHall('S', 20, film.name, datetime.datetime.now().strftime('%d/%m/%y, %H:%M'))
+    # hall = CinemaHall('S', 20, film.name, datetime.datetime.now().strftime('%d/%m/%y, %H:%M'))
+    hall = CinemaHall('S', 20, '', '')
+
     print(hall)
