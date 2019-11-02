@@ -5,6 +5,7 @@ from Objects.client import Client
 class FoodShop(object):
     """
     Ларёк
+    - id сотрудника, который сейчас работает за кассой (добавить)
     - время покупки еды
     - время покупки воды
     """

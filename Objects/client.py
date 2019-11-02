@@ -4,7 +4,7 @@ from utils.random_mod import random_with_chance
 class Client(object):
     """
     Клиент
-    - деньги ?
+    - денег достаточно на все хотелки, остальное не важно
     - предпочтения по фильмам (3 фильма) list[]
     - предпочтения по закускам -> boolean  1 or 0
     - предпочтения по напиткам -> boolean 1 or 0
