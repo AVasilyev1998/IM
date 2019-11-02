@@ -9,7 +9,7 @@ class Client(object):
     - предпочтения по закускам -> boolean  1 or 0
     - предпочтения по напиткам -> boolean 1 or 0
     """
-    def __init__(self, id, films):
+    def __init__(self, films):
         # self.id = hash()
         if isinstance(films, list):
             self.films = films
