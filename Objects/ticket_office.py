@@ -1,4 +1,6 @@
 import datetime
+
+from Objects.cinema_hall import CinemaHall
 from Objects.film import Film
 
 
