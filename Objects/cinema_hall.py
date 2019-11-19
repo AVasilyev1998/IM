@@ -18,13 +18,11 @@ class CinemaHall(object):
         try:
             self.next_film_name = next_film_name
         except Exception('Сеанс без фильма!') as e:
-            print(e)
-        # Принтуем ошибку, если у сеанса не оказалось фильма.
+            print(e)  # Принтуем ошибку, если у сеанса не оказалось фильма.
         try:
             self.next_film_time = next_film_time
         except Exception('Сеанс без времени начала фильма!') as e:
-            print(e)
-        # Принтуем ошибку, если у сеанса не оказалось фильма.
+            print(e)  # Принтуем ошибку, если у сеанса не оказалось фильма.
         
     def __repr__(self):
         return f'name: {self.name} | capacity: {self.capacity} | next_film_time: {self.next_film_time}'
