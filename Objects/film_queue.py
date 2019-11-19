@@ -7,11 +7,17 @@ class FilmQueue:
     """
         Очередь фильмов
     """
-    def __init__(self):
+    def __init__(self, max_length=7):
         self.__deque = deque()
+        self.__max_length = max_length
+        self.length = 0
 
     def add_film(self, film: Film):
-        self.__deque.append(film)
+        if self.length == self.__max_length:
+            raise Exception('Max size of queue reached')
+        else:
+            self.__deque.append(film)
+            self.length += 1
 
     def get_film(self) -> Film:
         return self.__deque.popleft()
@@ -36,3 +42,11 @@ if __name__ == "__main__":
     print(film_queue)
     film_queue.add_film(creator.create_film())
     print(film_queue)
+
+    # size of queue test
+    # film_queue.add_film(creator.create_film())
+    # film_queue.add_film(creator.create_film())
+    # film_queue.add_film(creator.create_film())
+    # film_queue.add_film(creator.create_film())
+    # film_queue.add_film(creator.create_film())
+    # film_queue.add_film(creator.create_film())
