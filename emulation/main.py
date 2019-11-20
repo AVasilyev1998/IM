@@ -12,12 +12,12 @@ def simulate(debug=True):
             tmp_film = film.strip('\n')
             films.append(tmp_film)
     creator = FilmCreator(names=films)
-    film_queue = FilmQueue()
+    films_in_distribution = []
     for i in range(7):
-        film_queue.add_film(creator.create_film())
-    print(f'очередь фильмов:\n {film_queue}') if debug else None
+        films_in_distribution.append(creator.create_film())
+    print(f'фильмы в прокате:\n {films_in_distribution}') if debug else None
     # --------------------------------- Создаем очередь фильмов ------------------------------
-    # ---------------------------------
+
 
 
 if __name__ == "__main__":

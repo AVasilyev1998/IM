@@ -6,6 +6,7 @@ import random
 import datetime
 from timeit import Timer
 
+
 class FilmCreator:
     """
     film: name, end_date, duration
