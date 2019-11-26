@@ -90,18 +90,18 @@ class Scheduler:
 
 if __name__ == "__main__":
     # start =
-    ses = Session(hall=CinemaHall('x', 20, next_film='', next_film_time=''), film=creator.create_film(), ticket_price=100)
+    # ses = Session(hall=CinemaHall('x', 20, next_film='', next_film_time=''), film=creator.create_film(), ticket_price=100)
 
-    schedule = Scheduler()
-    x = CinemaHall('x', 20, '', '')
-    m = CinemaHall('m', 40, '', '')
-    l = CinemaHall('l', 60, '', '')
-    schedule.set_session(x, 200)
-    schedule.set_session(m, 180)
-    schedule.set_session(l, 160)
-    print(schedule)
-    schedule.run_session(x)
-    print(schedule.current_session(x))
+    # schedule = Scheduler()
+    # x = CinemaHall('x', 20, '', '')
+    # m = CinemaHall('m', 40, '', '')
+    # l = CinemaHall('l', 60, '', '')
+    # schedule.set_session(x, 200)
+    # schedule.set_session(m, 180)
+    # schedule.set_session(l, 160)
+    # print(schedule)
+    # schedule.run_session(x)
+    # print(schedule.current_session(x))
 
     # print(schedule)
     # print(ses)
