@@ -2,6 +2,7 @@ import datetime
 
 from Objects.cinema_hall import CinemaHall
 from Objects.film import Film
+from Objects.schedule import Scheduler
 
 
 class Ticket(object):
@@ -20,7 +21,8 @@ class Ticket(object):
         self.price = price
 
     def __repr__(self):
-        return f'ticket to {self.hall.next_film_name} with price {self.price}'
+        # return f'ticket to {self.hall.next_film_name} with price {self.price}'
+        return f'ticket to film with price {self.price}'
 
 
 class TicketOffice(object):
@@ -34,6 +36,11 @@ class TicketOffice(object):
 
     def __repr__(self):
         return f'{len(self.tickets)} tickets on sale'
+
+    def sale_ticket(self, film: Film):
+        iter = 0
+        for ticket in self.tickets:
+            pass
 
 
 if __name__ == '__main__':
