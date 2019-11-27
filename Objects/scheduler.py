@@ -1,6 +1,7 @@
 from collections import deque
 from film_creator import FilmCreator
 import datetime
+from random import random
 
 from cinema_hall import CinemaHall
 from film import Film
@@ -19,16 +20,20 @@ class Session:
     Время окончания сеанса = время начала + длительность
     """
 
-    def __init__(self, hall: CinemaHall, film: Film, ticket_price,
-                 start_time=datetime.datetime.combine(datetime.date.today(), datetime.time(8, 0))):
-        self.filmName = film.name
-        self.hallName = hall.name
-        self.start_time = start_time
+    def __init__(self, hall: CinemaHall, film: Film):
+        self.film_name = film.name
+        self.hall_name = hall.name
+        self.free_sits = hall.capacity
+        self.start_time = datetime.datetime.combine(datetime.date.today(), datetime.time(8, 0))
         self.end_time = self.start_time + datetime.timedelta(minutes=self.film.duration) + datetime.timedelta(minutes=15)
-        self.ticket_price = ticket_price
+        self.ticket_price = gen_ticket_price()
+
+    def gen_ticket_price(self):
+        return int(random.random()*200 + 100) # генератор цены билета от 100 до 300
 
     def __repr__(self):
-        return f'{self.film.name} | starts at: {self.start_time.strftime("%H:%M")} | ends at: {self.end_time.time().strftime("%H:%M")} |' \
+        # не нравится мне эта реализация, но лень менять, поэтому ок)))
+        return f'{self.film_name} | starts at: {self.start_time.strftime("%H:%M")} | ends at: {self.end_time.time().strftime("%H:%M")} |' \
                f' price: {self.ticket_price}'
 
 
