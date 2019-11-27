@@ -13,7 +13,7 @@ class FilmCreator:
     """
     def __init__(self, file_name='films.txt'):
         film_names_list = []
-        with open(file_name, 'r') as reader:
+        with open(file_name, 'r', encoding='utf-8') as reader:
             for film in reader:
                 film_names_list.append(film.strip('\n'))
         self.names = film_names_list
