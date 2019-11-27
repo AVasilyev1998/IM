@@ -1,9 +1,9 @@
 from collections import deque
-from Objects import film_creator
+from film_creator import FilmCreator
 import datetime
 
-from Objects.cinema_hall import CinemaHall
-from Objects.film import Film
+from cinema_hall import CinemaHall
+from film import Film
 
 
 class Session:
@@ -32,7 +32,7 @@ class Session:
                f' price: {self.ticket_price}'
 
 
-class Scheduler:
+class Schedule:
     """
         управление расписанием сеансов
         Три очереди на каждый из залов
@@ -89,19 +89,4 @@ class Scheduler:
 
 
 if __name__ == "__main__":
-    # start =
-    # ses = Session(hall=CinemaHall('x', 20, next_film='', next_film_time=''), film=creator.create_film(), ticket_price=100)
-
-    # schedule = Scheduler()
-    # x = CinemaHall('x', 20, '', '')
-    # m = CinemaHall('m', 40, '', '')
-    # l = CinemaHall('l', 60, '', '')
-    # schedule.set_session(x, 200)
-    # schedule.set_session(m, 180)
-    # schedule.set_session(l, 160)
-    # print(schedule)
-    # schedule.run_session(x)
-    # print(schedule.current_session(x))
-
-    # print(schedule)
-    # print(ses)
+    print('Session-Schedule')
