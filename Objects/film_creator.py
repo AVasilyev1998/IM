@@ -1,7 +1,7 @@
 """
 creating random objects type of Film
 """
-from Objects.film import Film
+from film import Film
 import random
 import datetime
 from timeit import Timer
@@ -11,9 +11,9 @@ class FilmCreator:
     """
     film: name, end_date, duration
     """
-    def __init__(self, file_name='/home/alex/git/IM/Objects/films.txt'):
+    def __init__(self, file_name='films.txt'):
         film_names_list = []
-        with open(file_name, 'r') as reader:
+        with open(file_name, 'r', encoding='utf-8') as reader:
             for film in reader:
                 film_names_list.append(film.strip('\n'))
         self.names = film_names_list
@@ -26,7 +26,4 @@ class FilmCreator:
 
 
 if __name__ == "__main__":
-    creator = FilmCreator()
-
-    # t = Timer(lambda: creator.create_film) ТЕСТ ПРОИЗВОДИТЕЛЬНОСТИ
-    # print(t.timeit(number=20000))
+    print('FilmCreator')
