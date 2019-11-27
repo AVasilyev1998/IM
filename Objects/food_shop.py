@@ -1,5 +1,5 @@
 from collections import deque
-from Objects.client import Client
+from client import Client
 
 
 class FoodShop(object):
