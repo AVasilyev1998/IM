@@ -16,8 +16,7 @@ class Film(object):
         # TODO: дописать поля статистики
 
     def __repr__(self):
-        return f'{self.name} - {self.duration} - {self.end_date}'
-
+        return f'name: {self.name}\nduration (minutes): {self.duration}\nend_date: {self.end_date}'
 
 if __name__ == '__main__':
     print('Film')
