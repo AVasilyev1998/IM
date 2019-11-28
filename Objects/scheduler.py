@@ -50,26 +50,27 @@ class Schedule:
                 сеанс не назначается и берётся следующий в очереди фильмов
                 (не может быть больше 02:00)
     """
-    def __init__(self, n):
-        """
-            хардкод 3х очередей фильмов (если меняется количество залов то следует менять)
-        """
-        self.queue_s = deque()
-        self.s_last = datetime.datetime.combine(datetime.date.today(), datetime.time(7, 30))
-        self.queue_m = deque()
-        self.m_last = datetime.datetime.combine(datetime.date.today(), datetime.time(7, 30))
-        self.queue_l = deque()
-        self.l_last = datetime.datetime.combine(datetime.date.today(), datetime.time(7, 30))
 
-        self.films_list = [FilmCreator().create_film() for i in range(n)]
+    def __init__(self, f, h):
+        # произвольное количество фильмов и кинозалов,
+        # чтобы было, где смотреть "Крымский мост"
+        self.films_list = [FilmCreator().create_film() for i in range(f)]
+        self.halls_list = [CinemaHall().create_hall() for i in range(h)]
+
+        self.queues = []
+        for i in range(h):
+            self.queues.append(deque())
 
     def __repr__(self):
-        return f'сеансов в залах s:{len(self.queue_s)} | m:{len(self.queue_m)} | l:{len(self.queue_l)}'
+        return f'сеансов в залах:\n s:{len(self.queue_s)} | m:{len(self.queue_m)} | l:{len(self.queue_l)}'
 
 
 if __name__ == "__main__":
-    n = 7
-    test_schedule = Schedule(n)
-    for i in range(n):
-        print(test_schedule.films_list[i].name)
+    films_count = 7
+    halls_count = 3
+    test_schedule = Schedule(films_count, halls_count)
+    for i in range(films_count):
+        print(test_schedule.films_list[i])
+    for i in range(halls_count):
+        print(test_schedule.halls_list[i])
     print('Session-Schedule')
