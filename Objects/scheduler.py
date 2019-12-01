@@ -1,39 +1,10 @@
 from collections import deque
-from film_creator import FilmCreator
 import datetime
 from random import random
 
+from session import Session
+from film_creator import FilmCreator
 from cinema_hall import CinemaHall
-from film import Film
-
-
-class Session:
-    """
-    Поля:
-        Название зала (CinemaHall.name)
-        Название фильма (Film.name)
-        Начало сеанса (относительно воображаемого начала рабочего дня в минутах)
-        Стоимость билета (пофиг)
-        Время конца
-    Длительность сеанса помогает вычислить время окончания соответствующего сеанса
-        Она равна длительности фильма + 15 минут (типа рекламу покрутим в это время)
-    Время окончания сеанса = время начала + длительность
-    """
-
-    def __init__(self, hall: CinemaHall, film: Film):
-        self.film_name = film.name
-        self.hall_name = hall.name
-        self.free_sits = hall.capacity
-        self.start_time = hall.last_film_end_time + datetime.timedelta(minutes=30)
-        self.end_time = hall.last_film_end_time + datetime.timedelta(minutes=film.duration) + datetime.timedelta(minutes=45)
-        self.ticket_price = int(random()*200 + 100) # генератор цены билета от 100 до 300
-
-    def __repr__(self):
-        # не нравится мне эта реализация, но лень менять, поэтому ок)))
-        return f'hall: {self.hall_name} | ' \
-                f'film: {self.film_name} | starts at: {self.start_time.strftime("%H:%M")} | ends at: {self.end_time.time().strftime("%H:%M")} | ' \
-                f'price: {self.ticket_price}'
-
 
 class Schedule:
     """
@@ -54,10 +25,20 @@ class Schedule:
         # чтобы было, где смотреть "Крымский мост"
         self.films_list = []
         self.halls_list = []
-        for i in range(f):
-            self.films_list.append(FilmCreator().create_film())
-        for i in range(h):
-            self.halls_list.append(CinemaHall().create_hall())
+        tmp_film_names = []
+        tmp_hall_names = []
+        tmp_film = 0
+        tmp_hall = 0
+        while len(self.films_list) != f:
+            tmp_film = FilmCreator().create_film()
+            if tmp_film.name not in tmp_film_names:
+                self.films_list.append(tmp_film)
+                tmp_film_names.append(tmp_film.name)
+        while len(self.halls_list) != h:
+            tmp_hall = CinemaHall().create_hall()
+            if tmp_hall.name not in tmp_hall_names:
+                self.halls_list.append(tmp_hall)
+                tmp_hall_names.append(tmp_hall.name)
 
         # время закрытия кинотеатра
         self.close_time = datetime.datetime.combine(datetime.date.today(), datetime.time(2, 0)) + datetime.timedelta(hours=24)
@@ -125,6 +106,7 @@ if __name__ == "__main__":
 
     # вывод тестового расписания по залам
     for i in range(halls_count):
+        print(f'\n{i+1}-й зал:')
         print(test_schedule.halls_list[i])
         for j in range(len(test_schedule.queues[i])):
             print(test_schedule.queues[i][j])
