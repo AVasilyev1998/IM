@@ -1,10 +1,10 @@
 from collections import deque
 import datetime
-from random import random
 
 from session import Session
-from film_creator import FilmCreator
+from film import Film
 from cinema_hall import CinemaHall
+
 
 class Schedule:
     """
@@ -20,65 +20,64 @@ class Schedule:
                 (не может быть больше 02:00)
     """
 
-    def __init__(self, f, h):
+    def __init__(self, film_count, hall_count):
         # произвольное количество фильмов и кинозалов,
         # чтобы было, где смотреть "Крымский мост"
         self.films_list = []
         self.halls_list = []
         tmp_film_names = []
         tmp_hall_names = []
-        tmp_film = 0
-        tmp_hall = 0
-        while len(self.films_list) != f:
-            tmp_film = FilmCreator().create_film()
+        tmp_film = None
+        tmp_hall = None
+        while len(self.films_list) != film_count:
+            tmp_film = Film()
             if tmp_film.name not in tmp_film_names:
                 self.films_list.append(tmp_film)
                 tmp_film_names.append(tmp_film.name)
-        while len(self.halls_list) != h:
-            tmp_hall = CinemaHall().create_hall()
+        while len(self.halls_list) != hall_count:
+            tmp_hall = CinemaHall()
             if tmp_hall.name not in tmp_hall_names:
                 self.halls_list.append(tmp_hall)
                 tmp_hall_names.append(tmp_hall.name)
 
         # время закрытия кинотеатра
-        self.close_time = datetime.datetime.combine(datetime.date.today(), datetime.time(2, 0)) + datetime.timedelta(hours=24)
+        self.close_time = datetime.datetime.combine(datetime.date.today(),
+                                                    datetime.time(2, 0)) + datetime.timedelta(hours=24)
 
-        self.queues = [] # список всех сеансов по всем залам
-        for i in range(h):
+        self.queues = []  # список всех сеансов по всем залам
+        for k in range(hall_count):
             self.queues.append(deque())
 
+        self.create_schedule()
+
     def create_schedule(self):
-        fi = 0
+        next_film_number = 0
         hi = 0
-        tmp_film = FilmCreator().create_film()
-        f = len(self.films_list)
-        h = len(self.halls_list)
-        if f == 0 or h == 0:
-            return self
+        tmp_film = Film()
+        films_list_len = len(self.films_list)
+        halls_list_len = len(self.halls_list)
+        if films_list_len == 0 or halls_list_len == 0:
+            raise Exception('Ошибка формирования расписания: список фильмов и(или) список залов пуст')
 
-        # заполняем расписание сеансами, пока не упремся в 2-00 след.дня
+        # заполняем расписание сеансами, пока не упремся в 2-00 следующего дня
         while True:
-
             # выбираем следующий зал с минимальным временем окончания предыдущего фильма
-            min_t = self.halls_list[0].last_film_end_time
-            hi = 0
-            for i in range(h):
-                if self.halls_list[i].last_film_end_time < min_t:
-                    min_t = self.halls_list[i].last_film_end_time
-                    hi = i
+            tmp_dict = dict([(self.halls_list[l].last_film_end_time, l) for l in range(halls_list_len)])  # { datetime: i, ...}
+            hi = tmp_dict[min(tmp_dict.keys())]  # d[min(datetime)] - i
 
-            # выбираем фильм для зала
-            # если выбор всех возможных фильмов продлевает жизнь кинотеатра за self.close_time,
-            # то мы заканчиваем формирование дневного расписания и выдаем его
-            tmp_film = self.films_list[fi]
-            fi += 1
-            if fi == f:
-                fi = 0
+            tmp_film = self.films_list[next_film_number]
+            next_film_number += 1
+            if next_film_number == films_list_len:
+                next_film_number = 0
 
-            if self.halls_list[hi].last_film_end_time + datetime.timedelta(minutes=tmp_film.duration) + datetime.timedelta(minutes=45) > self.close_time:
-                for i in range(f):
-                    if self.halls_list[hi].last_film_end_time + datetime.timedelta(minutes=self.films_list[i].duration) + datetime.timedelta(minutes=45) < self.close_time:
-                        tmp_film = self.films_list[i]
+            if self.halls_list[hi].last_film_end_time +\
+                    datetime.timedelta(minutes=tmp_film.duration)\
+                    + datetime.timedelta(minutes=45) > self.close_time:
+                for k in range(films_list_len):
+                    if self.halls_list[hi].last_film_end_time +\
+                            datetime.timedelta(minutes=self.films_list[k].duration) +\
+                            datetime.timedelta(minutes=45) < self.close_time:
+                        tmp_film = self.films_list[k]
                 else:
                     return self
 
@@ -89,25 +88,23 @@ class Schedule:
             # изменение времени окончания последнего фильма у соответствующего зала
             self.halls_list[hi].last_film_end_time = tmp_session.end_time
 
-
     def __repr__(self):
-        return f'сеансов в залах:\n s:{len(self.queue_s)} | m:{len(self.queue_m)} | l:{len(self.queue_l)}'
+        ret_str = ''
+        for i in range(len(self.halls_list)):
+            ret_str += f'{i+1}й зал:\n'
+            ret_str += f'{self.halls_list[i]}\n'
+            for j in range(len(self.queues[i])):
+                ret_str += f'{self.queues[i][j]}\n'
+            ret_str += '\n'
+        return ret_str
 
 
 if __name__ == "__main__":
     films_count = 7
     halls_count = 3
-    
-    # наполнение тестового расписания фильмами и залами
+    # наполнение тестового расписания фильмами и залами а затем составление расписания
+
     test_schedule = Schedule(films_count, halls_count)
-
-    # составление расписания
-    test_schedule = test_schedule.create_schedule()
-
     # вывод тестового расписания по залам
-    for i in range(halls_count):
-        print(f'\n{i+1}-й зал:')
-        print(test_schedule.halls_list[i])
-        for j in range(len(test_schedule.queues[i])):
-            print(test_schedule.queues[i][j])
+    print(test_schedule)
 
