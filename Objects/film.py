@@ -23,7 +23,7 @@ class Film(object):
         else:
             raise TypeError
 
-    def create_film(self, filename='Objects/films.txt'):
+    def create_film(self, filename='films.txt'):
         with open(filename, 'r', encoding='utf-8') as reader:
             film_names_list = []
             for film in reader:
