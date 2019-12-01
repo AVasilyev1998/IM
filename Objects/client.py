@@ -29,7 +29,7 @@ class Client(object):
 if __name__ == '__main__':
     unique_clients = set()
     films = ['1', '2', '3']
-    for i in range(1000000):
+    for i in range(10):
         tmp_cl = Client(films)
         unique_clients.add(tmp_cl.id)
         print(tmp_cl.id)
