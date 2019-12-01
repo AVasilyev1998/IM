@@ -15,13 +15,20 @@ class Client(object):
             self.films = films
         else:
             raise TypeError
-        self.food_preference = random_with_chance(30)
-        self.drink_preference = random_with_chance(40)
+        self.food_preference = random_with_chance(30) * 0.4
+        self.drink_preference = random_with_chance(40) * 0.6
+        self.id = str(self.__hash__())
+        self.statistics = {}
 
     def __repr__(self):
-        return f' films:{self.films} / food: {self.food_preference} / drink: {self.drink_preference}'
+        return f'client:{self.id}\n films:{self.films} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
 
 
 if __name__ == '__main__':
-    client = Client(1, ['1', '2', '3'])
-    print(client)
+    unique_clients = set()
+    films = ['1', '2', '3']
+    for i in range(1000000):
+        tmp_cl = Client(films)
+        unique_clients.add(tmp_cl.id)
+        print(tmp_cl.id)
+    print(len(unique_clients))
