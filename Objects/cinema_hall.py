@@ -18,6 +18,7 @@ class CinemaHall(object):
             self.last_film_end_time = last_film_end_time
             self.name = name
             self.capacity = capacity
+            self.statistics = {}  # для сбора статистики по залу
         else:
             raise TypeError
 
@@ -26,6 +27,7 @@ class CinemaHall(object):
         halls_capacities = [5, 7, 10, 16, 25, 27, 32, 44, 49, 55, 64, 81, 88, 100, 125, 256]
         self.capacity = choice(halls_capacities)
         self.name = choice(halls_names)
+        self.statistics = {}
         return self
 
     def __repr__(self):
