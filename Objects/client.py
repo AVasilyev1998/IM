@@ -1,5 +1,5 @@
 from utils.random_mod import random_with_chance
-
+from film import Film
 
 class Client(object):
     """
@@ -9,12 +9,18 @@ class Client(object):
     - предпочтения по закускам -> boolean  1 or 0
     - предпочтения по напиткам -> boolean 1 or 0
     """
-    def __init__(self, films):
-        if isinstance(films, list):
-            self.films = films
+    def __init__(self, films=0):
+        if films == 0:
+            self.films = [Film() for i in range(3)]
         else:
-            raise TypeError
-        
+            if isinstance(films, list):
+                if len(films) == 3:
+                    self.films = films
+                else:
+                    raise Exception('Может быть только три фильма'
+                                    ' в пожеланиях клиента')
+
+
         #  2 множитель ниже - продолжительность операции в условных еденицах
         self.food_preference = random_with_chance(30) * 0.4
         self.drink_preference = random_with_chance(40) * 0.6
