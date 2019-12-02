@@ -11,6 +11,7 @@ FILE_WITH_FILMS = 'Objects/films.txt'
 NUM_OF_CLIENTS = 20
 
 def simulate(debug=True):
+    pass
     # --------------------------------- Создаем прокат фильмов ------------------------------
 
     # films = []
