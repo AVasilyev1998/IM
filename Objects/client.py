@@ -27,10 +27,10 @@ class Client(object):
         
         self.id = hash(randint(0, 10000000) + self.drink_preference + 
                         self.food_preference + randint(0, 10000000))
-        # self.statistics = {}  # TODO: собирать статистику по клиенту сюда
+        self.statistics = {}  # TODO: собирать статистику по клиенту сюда
 
     def __repr__(self):
-        return f'client:{self.id}\n films:{[film.name for film in self.films]} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
+        return f'client:{self.id}\nstatistic:{self.statistics}\n films:{[film.name for film in self.films]} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
 
 
 if __name__ == '__main__':
