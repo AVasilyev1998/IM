@@ -4,8 +4,8 @@ import random
 from scheduler import Schedule
 
 class ClientSim(object):
-    def __init__(self, env, name):
-        self.client = Client()
+    def __init__(self, env, name, films_list):
+        self.client = Client(films_list)
         self.action = env.process(self.run())
         self.env = env
         self.name = random.randint(1000, 9999)
@@ -46,18 +46,15 @@ print(daily_schedule)
 
 films_for_choice = daily_schedule.films_list
 
-for i in range(10):
-    c = Client(films_for_choice)
-    print(c)
 
-# env = simpy.Environment()
-# ticket_shop = simpy.Resource(env, capacity=2)
-# food_shop = simpy.Resource(env, capacity=1)
-#
-# all_clients = 500
-# for part_of_clients in range(all_clients // 10):
-#     for i in range(50):
-#         ClientSim(env, i)
-#
-# env.run(until=1000)
+env = simpy.Environment()
+ticket_shop = simpy.Resource(env, capacity=2)
+food_shop = simpy.Resource(env, capacity=1)
+
+all_clients = 500
+for part_of_clients in range(all_clients // 10):
+    for i in range(50):
+        ClientSim(env, i, films_for_choice)
+
+env.run(until=1000)
 
