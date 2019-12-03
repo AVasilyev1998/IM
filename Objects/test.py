@@ -12,7 +12,7 @@ class ClientSim(object):
         self.env = env
         self.name = random.randint(1000, 9999)
         self.schedule = schedule
-        self.available_sessions = self.get_available_sessions()
+        # self.available_sessions = self.get_available_sessions()
 
     def run(self):
         while True:
@@ -36,7 +36,7 @@ class ClientSim(object):
                         yield self.env.process(self.buy_snacks())
 
     def get_available_sessions(self) -> list:
-        now = datetime.datetime.combine(datetime.date.today(), datetime.time(8, self.env.now))
+        now = datetime.datetime.combine(datetime.date.today(), datetime.time(8, round(self.env.now)))
         now_minus_30min = now - datetime.timedelta(minutes=30)
         now_plus_1hour = now + datetime.timedelta(hours=1)
         sessions = []
@@ -61,7 +61,8 @@ class ClientSim(object):
         return None         # возвращаем пустоту, если для клиента нет подходящего фильма
 
     def buy_ticket(self):
-        # TODO: ...
+        # TODO: когда кончаются билеты удалить сессию из расписания (сделать недоступной)
+        self.available_sessions = self.get_available_sessions()
         choiced_session = self.choise_session()
         if choiced_session is not None:
             choiced_session.free_sits -= 1
