@@ -13,7 +13,6 @@ class ClientSim(object):
         self.name = random.randint(1000, 9999)
         self.schedule = schedule
         self.available_sessions = self.get_available_sessions()
-        self.choise_session()
 
     def run(self):
         while True:
@@ -63,8 +62,16 @@ class ClientSim(object):
 
     def buy_ticket(self):
         # TODO: ...
-        yield self.env.timeout(0.5)
-        print(f'{self.name} bought ticket at {round(self.env.now, 2)}')
+        choiced_session = self.choise_session()
+        if choiced_session is not None:
+            choiced_session.free_sits -= 1
+            print(f'{self.name} bought ticket to {choiced_session.film_name} at {round(self.env.now, 2)}')
+            print(f'на фильм {choiced_session.film_name} осталось'
+                  f' {choiced_session.free_sits} билетов')
+            yield self.env.timeout(0.5)
+
+        else:
+            print(f'{self.name} didnt find needed film and went away')
 
     def buy_snacks(self):
         timeout_snacks = self.client.drink_preference + self.client.food_preference
@@ -85,7 +92,7 @@ ticket_shop = simpy.Resource(env, capacity=2)
 food_shop = simpy.Resource(env, capacity=1)
 
 
-for i in range(2):
+for i in range(40):
     ClientSim(env, films_for_choice, daily_schedule)
 
 env.run(until=20)
