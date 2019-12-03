@@ -27,7 +27,7 @@ class Session:
         self.end_time = hall.last_film_end_time + datetime.timedelta(minutes=film.duration)\
                         + datetime.timedelta(minutes=45)
         self.ticket_price = int(random()*200 + 100)  # генератор цены билета от 100 до 300
-        self.available = True
+        self.available = True  # availability of session by num of free sits
 
     def __repr__(self):
         # не нравится мне эта реализация, но лень менять, поэтому ок)))
