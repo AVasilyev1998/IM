@@ -10,9 +10,9 @@ class ClientSim(object):
         self.client = Client(films_list)
         self.action = env.process(self.run())
         self.env = env
-        self.name = random.randint(1000, 9999)
+        self.name = self.client.id
         self.schedule = schedule
-        # self.available_sessions = self.get_available_sessions()
+        self.available_sessions = []
 
     def run(self):
         while True:
@@ -45,7 +45,8 @@ class ClientSim(object):
                 start_time = self.schedule.queues[i][j].start_time
                 free_sits = self.schedule.queues[i][j].free_sits
                 # print(now_minus_30min, start_time, now_plus_1hour)  # TODO: delete before merge to master
-                if now_minus_30min < start_time < now_plus_1hour and free_sits > 0:
+                if now_minus_30min < start_time < now_plus_1hour and free_sits > 0\
+                        and self.schedule.queues[i][j].available is True:
                     sessions.append(self.schedule.queues[i][j])
         # print(sessions)
         return sessions
@@ -62,15 +63,17 @@ class ClientSim(object):
 
     def buy_ticket(self):
         # TODO: когда кончаются билеты удалить сессию из расписания (сделать недоступной)
+
         self.available_sessions = self.get_available_sessions()
         choiced_session = self.choise_session()
         if choiced_session is not None:
             choiced_session.free_sits -= 1
+            if choiced_session.free_sits == 0:
+                choiced_session.available = False
             print(f'{self.name} bought ticket to {choiced_session.film_name} at {round(self.env.now, 2)}')
             print(f'на фильм {choiced_session.film_name} осталось'
                   f' {choiced_session.free_sits} билетов')
             yield self.env.timeout(0.5)
-
         else:
             print(f'{self.name} didnt find needed film and went away')
 
