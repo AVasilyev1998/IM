@@ -1,9 +1,9 @@
 from collections import deque
 import datetime
 
-from Objects.session import Session
-from Objects.film import Film
-from Objects.cinema_hall import CinemaHall
+from session import Session
+from film import Film
+from cinema_hall import CinemaHall
 
 
 class Schedule:

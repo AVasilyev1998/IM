@@ -14,7 +14,7 @@ class Client(object):
     def __init__(self, client_films):
         if len(client_films) > 3:
             self.films = []
-            while len(self.films)<3:
+            while len(self.films) < 3:
                 tmp_film = choice(client_films)
                 if tmp_film not in self.films:
                     self.films.append(tmp_film)
@@ -30,7 +30,7 @@ class Client(object):
         # self.statistics = {}  # TODO: собирать статистику по клиенту сюда
 
     def __repr__(self):
-        return f'client:{self.id}\n films:{self.films} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
+        return f'client:{self.id}\n films:{[film.name for film in self.films]} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
 
 
 if __name__ == '__main__':
