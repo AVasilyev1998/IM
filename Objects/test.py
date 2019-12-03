@@ -2,13 +2,18 @@ import simpy
 from client import Client
 import random
 from scheduler import Schedule
+import datetime
+
 
 class ClientSim(object):
-    def __init__(self, env, name, films_list):
+    def __init__(self, env, films_list: list, schedule: Schedule):
         self.client = Client(films_list)
         self.action = env.process(self.run())
         self.env = env
         self.name = random.randint(1000, 9999)
+        self.schedule = schedule
+        self.available_sessions = self.get_available_sessions()
+        self.choise_session()
 
     def run(self):
         while True:
@@ -31,7 +36,33 @@ class ClientSim(object):
                         yield req
                         yield self.env.process(self.buy_snacks())
 
+    def get_available_sessions(self) -> list:
+        now = datetime.datetime.combine(datetime.date.today(), datetime.time(8, self.env.now))
+        now_minus_30min = now - datetime.timedelta(minutes=30)
+        now_plus_1hour = now + datetime.timedelta(hours=1)
+        sessions = []
+        for i in range(len(self.schedule.queues)):
+            for j in range(len(self.schedule.queues[i])):
+                start_time = self.schedule.queues[i][j].start_time
+                free_sits = self.schedule.queues[i][j].free_sits
+                # print(now_minus_30min, start_time, now_plus_1hour)  # TODO: delete before merge to master
+                if now_minus_30min < start_time < now_plus_1hour and free_sits > 0:
+                    sessions.append(self.schedule.queues[i][j])
+        # print(sessions)
+        return sessions
+
+    def choise_session(self):
+        for i in self.client.films:
+            # { film_name : session }  dict([(,) for i in ...])
+            session_dict = dict([(session.film_name, session) for session in self.available_sessions])
+            # print(session_dict, self.client.films)
+            session_films = [session.film_name for session in self.available_sessions]
+            if i.name in session_films:
+                return session_dict[i.name]
+        return None         # возвращаем пустоту, если для клиента нет подходящего фильма
+
     def buy_ticket(self):
+        # TODO: ...
         yield self.env.timeout(0.5)
         print(f'{self.name} bought ticket at {round(self.env.now, 2)}')
 
@@ -44,6 +75,8 @@ class ClientSim(object):
 daily_schedule = Schedule(7, 3)
 print(daily_schedule)
 
+
+#
 films_for_choice = daily_schedule.films_list
 
 
@@ -51,10 +84,9 @@ env = simpy.Environment()
 ticket_shop = simpy.Resource(env, capacity=2)
 food_shop = simpy.Resource(env, capacity=1)
 
-all_clients = 500
-for part_of_clients in range(all_clients // 10):
-    for i in range(50):
-        ClientSim(env, i, films_for_choice)
 
-env.run(until=1000)
+for i in range(2):
+    ClientSim(env, films_for_choice, daily_schedule)
+
+env.run(until=20)
 

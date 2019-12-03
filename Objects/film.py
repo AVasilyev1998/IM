@@ -29,7 +29,7 @@ class Film(object):
             for film in reader:
                 film_names_list.append(film.strip('\n'))
             self.end_date = datetime.datetime.now() + datetime.timedelta(days=14)
-            self.duration = int(random.random() * 70 + 110)
+            self.duration = int(random.random() * 110 + 70)
             self.name = random.choice(film_names_list)
             self.statistics = {}
 
