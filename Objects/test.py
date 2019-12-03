@@ -35,9 +35,7 @@ class ClientSim(object):
                     yield self.env.process(self.buy_snacks())
 
     def get_available_sessions(self) -> list:
-        now = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=int((8 + round(self.env.now)) // 1440)),
-                                                                                datetime.time((8 + round(self.env.now // 60) % 24),
-                                                                                                 round(self.env.now) % 60))
+        now = self.new_now(self.env.now)
         now_minus_30min = now - datetime.timedelta(minutes=30)
         now_plus_1hour = now + datetime.timedelta(hours=1)
         sessions = []
@@ -45,25 +43,28 @@ class ClientSim(object):
             for j in range(len(self.schedule.queues[i])):
                 start_time = self.schedule.queues[i][j].start_time
                 free_sits = self.schedule.queues[i][j].free_sits
-                # print(now_minus_30min, start_time, now_plus_1hour)  # TODO: delete before merge to master
                 if now_minus_30min < start_time < now_plus_1hour and free_sits > 0\
                         and self.schedule.queues[i][j].available is True:
                     sessions.append(self.schedule.queues[i][j])
-        # print(sessions)
         return sessions
 
     def choise_session(self):
         for i in self.client.films:
-            # { film_name : session }  dict([(,) for i in ...])
             session_dict = dict([(session.film_name, session) for session in self.available_sessions])
-            # print(session_dict, self.client.films)
             session_films = [session.film_name for session in self.available_sessions]
             if i.name in session_films:
                 return session_dict[i.name]
         return None         # возвращаем пустоту, если для клиента нет подходящего фильма
 
+    def new_now(self, now):
+        return datetime.datetime.combine(datetime.date.today() +\
+            datetime.timedelta(days=((8+round(now))//1440)), # точный день
+            datetime.time((8+round(now)//60)%24, round(now)%60)
+        )
+
     def buy_ticket(self):
         # TODO: когда кончаются билеты удалить сессию из расписания (сделать недоступной)
+        now = self.new_now(self.env.now)
         self.available_sessions = self.get_available_sessions()
         choiced_session = self.choise_session()
         if choiced_session is not None:
@@ -72,33 +73,21 @@ class ClientSim(object):
                 choiced_session.available = False
             self.client.statistics['ticket buying'] = [choiced_session.film_name,
                                                        choiced_session.hall_name,
-                                                       self.env.now]
-            minute = -1
-            if 0 < self.env.now % 60 < 10:
-                minute = f'0{int(self.env.now) % 60}'
-            elif self.env.now == 0:
-                minute = '00'
-            print(
-                f'{self.name} bought ticket at {int(self.env.now) // 60 + 8}:'
-                f'{int(self.env.now) % 60 if minute == -1 else minute}'
-            )
+                                                       now]
+            print(f'{self.name} bought ticket at {now}')
             print(f'на фильм {choiced_session.film_name} осталось'
-                  f' {choiced_session.free_sits} билетов'
-                  )
+                f' {choiced_session.free_sits} билетов'
+                )
             yield self.env.timeout(0.5)
         else:
             self.client.statistics['ticket buying'] = 'client went away'
             print(f'{self.name} didnt find needed film and went away')
 
     def buy_snacks(self):
+        now = self.new_now(self.env.now)
         timeout_snacks = self.client.drink_preference + self.client.food_preference
-        self.client.statistics['snacks buying'] = (self.env.now, self.client.id)
-        minute = -1
-        if 0 < self.env.now % 60 < 10:
-            minute = f'0{int(self.env.now) % 60}'
-        elif self.env.now == 0:
-            minute = '00'
-        print(f'{self.name} bought snacks at {int(self.env.now) // 60 + 8}:{int(self.env.now) % 60 if minute == -1 else minute}')
+        self.client.statistics['snacks buying'] = (now, self.client.id)
+        print(f'{self.name} bought snacks at {now}')
         yield self.env.timeout(timeout_snacks)
 
 
