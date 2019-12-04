@@ -5,11 +5,13 @@ from random import choice
 class CinemaHall(object):
     """
     Зал
-    - наименование
-    - вместительность
+    name - наименование
+    capacity - вместительность
+    last_film_end_time - время окончани последнего фильма
     """
 
-    def __init__(self, last_film_end_time = datetime.datetime.combine(datetime.date.today(),datetime.time(7, 30)),
+    def __init__(self,
+                 last_film_end_time=datetime.datetime.combine(datetime.date.today(), datetime.time(7, 30)),
                  name=0, capacity=0):
         if not name and not capacity:
             self.last_film_end_time = last_film_end_time
@@ -18,7 +20,7 @@ class CinemaHall(object):
             self.last_film_end_time = last_film_end_time
             self.name = name
             self.capacity = capacity
-            self.statistics = {}  # для сбора статистики по залу
+            # self.statistics = {}  # для сбора статистики по залу (возможно не понадобится)
         else:
             raise TypeError
 
@@ -27,11 +29,13 @@ class CinemaHall(object):
         halls_capacities = [5, 7, 10, 16, 25, 27, 32, 44, 49, 55, 64, 81, 88, 100, 125, 256]
         self.capacity = choice(halls_capacities)
         self.name = choice(halls_names)
-        self.statistics = {}
+        # self.statistics = {}  # для сбора статистики по залу (возможно не понадобится)
         return self
 
     def __repr__(self):
-        return f'name: {self.name} | capacity: {self.capacity} | last_film_end_time: {self.last_film_end_time}'
+        return f'name: {self.name}\n' \
+               f' capacity: {self.capacity}\n' \
+               f' last_film_end_time: {self.last_film_end_time}\n'
 
 
 if __name__ == '__main__':
@@ -45,4 +49,3 @@ if __name__ == '__main__':
         a = CinemaHall(name='XL', last_film_end_time=1)
     except TypeError:
         print('Возможен ввод только всех параметров сразу: TypeError')
-
