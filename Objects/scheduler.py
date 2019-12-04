@@ -42,7 +42,7 @@ class Schedule:
 
         # время закрытия кинотеатра
         self.close_time = datetime.datetime.combine(datetime.date.today(),
-                                                    datetime.time(2, 0)) + datetime.timedelta(hours=24)
+                                    datetime.time(2, 0)) + datetime.timedelta(hours=24)
 
         self.queues = []  # список всех сеансов по всем залам
         for k in range(hall_count):
@@ -52,7 +52,7 @@ class Schedule:
 
     def create_schedule(self):
         next_film_number = 0
-        hi = 0
+        next_hall_number = 0
         tmp_film = Film()
         films_list_len = len(self.films_list)
         halls_list_len = len(self.halls_list)
@@ -63,18 +63,18 @@ class Schedule:
         while True:
             # выбираем следующий зал с минимальным временем окончания предыдущего фильма
             tmp_dict = dict([(self.halls_list[l].last_film_end_time, l) for l in range(halls_list_len)])  # { datetime: i, ...}
-            hi = tmp_dict[min(tmp_dict.keys())]  # d[min(datetime)] - i
+            next_hall_number = tmp_dict[min(tmp_dict.keys())]  # d[min(datetime)] - i
 
             tmp_film = self.films_list[next_film_number]
             next_film_number += 1
             if next_film_number == films_list_len:
                 next_film_number = 0
 
-            if self.halls_list[hi].last_film_end_time +\
+            if self.halls_list[next_hall_number].last_film_end_time +\
                     datetime.timedelta(minutes=tmp_film.duration)\
                     + datetime.timedelta(minutes=45) > self.close_time:
                 for k in range(films_list_len):
-                    if self.halls_list[hi].last_film_end_time +\
+                    if self.halls_list[next_hall_number].last_film_end_time +\
                             datetime.timedelta(minutes=self.films_list[k].duration) +\
                             datetime.timedelta(minutes=45) < self.close_time:
                         tmp_film = self.films_list[k]
@@ -82,16 +82,16 @@ class Schedule:
                     return self
 
             # формирование сеанса
-            tmp_session = Session(self.halls_list[hi], tmp_film)
-            self.queues[hi].append(tmp_session)
+            tmp_session = Session(self.halls_list[next_hall_number], tmp_film)
+            self.queues[next_hall_number].append(tmp_session)
             
             # изменение времени окончания последнего фильма у соответствующего зала
-            self.halls_list[hi].last_film_end_time = tmp_session.end_time
+            self.halls_list[next_hall_number].last_film_end_time = tmp_session.end_time
 
     def __repr__(self):
         ret_str = ''
         for i in range(len(self.halls_list)):
-            ret_str += f'{i+1}й зал:\n'
+            ret_str += f'{i+1}-й зал:\n'
             ret_str += f'{self.halls_list[i]}\n'
             for j in range(len(self.queues[i])):
                 ret_str += f'{self.queues[i][j]}\n'
@@ -107,4 +107,3 @@ if __name__ == "__main__":
     test_schedule = Schedule(films_count, halls_count)
     # вывод тестового расписания по залам
     print(test_schedule)
-
