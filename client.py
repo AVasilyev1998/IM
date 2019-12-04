@@ -2,7 +2,6 @@ from utils.random_mod import random_with_chance
 from random import choice, randint
 
 
-
 class Client(object):
     """
     Клиент
@@ -25,12 +24,15 @@ class Client(object):
         self.food_preference = random_with_chance(30) * 0.4
         self.drink_preference = random_with_chance(40) * 0.6
         
-        self.id = hash(randint(0, 10000000) + self.drink_preference + 
-                        self.food_preference + randint(0, 10000000))
+        self.id = hash(randint(0, 10000000) + self.drink_preference +
+                       self.food_preference + randint(0, 10000000))
         self.statistics = {}  # TODO: собирать статистику по клиенту сюда
 
     def __repr__(self):
-        return f'client:{self.id}\nstatistic:{self.statistics}\n films:{[film.name for film in self.films]} \n food: {self.food_preference} \n drink: {self.drink_preference}\n'
+        return f'client:{self.id}\nstatistic:{self.statistics}\n' \
+               f' films:{[film.name for film in self.films]}' \
+               f' \n food: {self.food_preference}' \
+               f' \n drink: {self.drink_preference}\n'
 
 
 if __name__ == '__main__':
