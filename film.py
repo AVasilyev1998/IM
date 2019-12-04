@@ -8,8 +8,9 @@ class Film(object):
     - name -  название
     - end_date - дата окончания проката DD-MM-YY
     - duration - продолжительность hh-mm
-    Film() сам сгенерирует фильм
-    в противном случае следует задать все параметры, иначе выпадет TypeError
+
+    Film() - сам сгенерирует фильм
+            в противном случае следует задать все параметры, иначе выпадет TypeError
     """
     def __init__(self, name=0, end_date=0, duration=0):
         if not name and not end_date and not duration:
