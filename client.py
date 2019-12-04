@@ -1,7 +1,7 @@
 from utils.random_mod import random_with_chance
 from random import choice, randint
 
-from film import Film
+
 
 class Client(object):
     """
