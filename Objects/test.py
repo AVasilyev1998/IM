@@ -4,7 +4,7 @@ import random
 from scheduler import Schedule
 import datetime
 
-# push test
+
 class ClientSim(object):
     def __init__(self, env, films_list: list, schedule: Schedule):
         self.client = Client(films_list)
@@ -57,9 +57,9 @@ class ClientSim(object):
         return None         # возвращаем пустоту, если для клиента нет подходящего фильма
 
     def new_now(self, now):
-        return datetime.datetime.combine(datetime.date.today() +\
-            datetime.timedelta(days=((8+round(now))//1440)), # точный день
-            datetime.time((8+round(now)//60)%24, round(now)%60)
+        return datetime.datetime.combine(datetime.date.today() +
+            datetime.timedelta(days=(8 + round(now) // 60) // 24),  # точный день
+            datetime.time((8 + round(now) // 60) % 24, round(now) % 60)
         )
 
     def buy_ticket(self):
