@@ -4,19 +4,19 @@ import random
 from scheduler import Schedule
 import datetime
 
+FILMS_COUNT = 7
+HALLS_COUNT = 5
 
 class ClientSim(object):
     def __init__(self, env, films_list: list, schedule: Schedule):
         self.client = Client(films_list)
         self.action = env.process(self.run())
         self.env = env
-        self.name = self.client.id
         self.schedule = schedule
         self.available_sessions = []
 
     def run(self):
         if len(food_shop.queue) // 2 < len(ticket_shop.queue):  # TODO: передать ticket и food кассы в класс при инициализации
-            # print(f'{self.name} buying food first')
             if self.client.food_preference + self.client.drink_preference != 0:
                 with food_shop.request() as req:
                     yield req
@@ -25,7 +25,6 @@ class ClientSim(object):
                 yield req
                 yield self.env.process(self.buy_ticket())
         else:
-            # print(f'{self.name} buying tickets first')
             with ticket_shop.request() as req:
                 yield req
                 yield self.env.process(self.buy_ticket())
@@ -36,6 +35,7 @@ class ClientSim(object):
 
     def get_available_sessions(self) -> list:
         now = self.new_now(self.env.now)
+        self.client.statistics['coming time'] = now
         now_minus_30min = now - datetime.timedelta(minutes=30)
         now_plus_1hour = now + datetime.timedelta(hours=1)
         sessions = []
@@ -71,28 +71,34 @@ class ClientSim(object):
             choiced_session.free_sits -= 1
             if choiced_session.free_sits == 0:
                 choiced_session.available = False
-            self.client.statistics['ticket buying'] = [choiced_session.film_name,
-                                                       choiced_session.hall_name,
-                                                       now]
-            print(f'{self.name} bought ticket at {now}')
+            self.client.statistics['bought ticket'] = True
+            self.client.statistics['film'] = choiced_session.film_name
+            self.client.statistics['hall'] = choiced_session.hall_name
+            self.client.statistics['ticket buying time'] = now
+            self.client.statistics['session begining time'] = choiced_session.start_time
+            self.client.statistics['spend money'] = choiced_session.ticket_price +\
+                (self.client.food_preference + self.client.drink_preference)*250
+            print(f'{self.client.id} bought ticket at {now}')
             print(f'на фильм {choiced_session.film_name} осталось'
                 f' {choiced_session.free_sits} билетов'
                 )
             yield self.env.timeout(0.5)
         else:
-            self.client.statistics['ticket buying'] = 'client went away'
-            print(f'{self.name} didnt find needed film and went away')
+            self.client.statistics['bought ticket'] = False
+            self.client.statistics['ticket buying time'] = None
+            print(f'{self.client.id} didnt find needed film and went away')
 
     def buy_snacks(self):
         now = self.new_now(self.env.now)
+        self.client.statistics['snacks buying time'] = now
         timeout_snacks = self.client.drink_preference + self.client.food_preference
-        self.client.statistics['snacks buying'] = (now, self.client.id)
-        print(f'{self.name} bought snacks at {now}')
+        self.client.statistics['bought snacks'] = timeout_snacks
+        print(f'{self.client.id} bought snacks at {now}')
         yield self.env.timeout(timeout_snacks)
 
 
 
-daily_schedule = Schedule(7, 3)
+daily_schedule = Schedule(FILMS_COUNT, HALLS_COUNT)
 print(daily_schedule)
 
 
@@ -108,7 +114,14 @@ clients = []
 for i in range(3000):
     client = ClientSim(env, films_for_choice, daily_schedule)
     clients.append(client)
-env.run(until=1080)
+env.run(until=990)
 
+# Перенос статистики в файл
+statistic = []
+for i in range(clients.__len__()):
+    statistic.append(clients[i].client.statistics)
+f = open('sim.txt', 'w')
+f.write(str(statistic))
+f.close()
 
 

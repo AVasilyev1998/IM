@@ -10,8 +10,7 @@ class CinemaHall(object):
     last_film_end_time - время окончани последнего фильма
     """
 
-    def __init__(self,
-                 last_film_end_time=datetime.datetime.combine(datetime.date.today(), datetime.time(7, 30)),
+    def __init__(self, last_film_end_time = datetime.datetime.combine(datetime.date.today(),datetime.time(8, 0)),
                  name=0, capacity=0):
         if not name and not capacity:
             self.last_film_end_time = last_film_end_time
