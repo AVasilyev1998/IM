@@ -1,6 +1,6 @@
 import simpy
 from client import Client
-import random
+import pickle
 from scheduler import Schedule
 import datetime
 
@@ -97,7 +97,6 @@ class ClientSim(object):
         yield self.env.timeout(timeout_snacks)
 
 
-
 daily_schedule = Schedule(FILMS_COUNT, HALLS_COUNT)
 print(daily_schedule)
 
@@ -120,8 +119,30 @@ env.run(until=990)
 statistic = []
 for i in range(clients.__len__()):
     statistic.append(clients[i].client.statistics)
-f = open('sim.txt', 'w')
-f.write(str(statistic))
-f.close()
+with open('sim.pickle', 'wb') as writer:
+    pickle.dump(statistic, writer)
 
+
+print(statistic[100:105])
+statistic_vals = {}
+for i in range(len(statistic)):
+    #  amount of gone people
+    if statistic[i]['film'] is None and statistic[i]['hall'] is None:
+        statistic_vals['gone'] = statistic_vals.setdefault('gone', 0) + 1
+    # amount of bought food
+    if statistic[i]['bought snacks'] is True:
+        statistic_vals['bought food'] = statistic_vals.setdefault('bought food', 0) + 1
+    # halls statistic
+    if statistic[i]['hall'] is not None:
+        if statistic_vals.get(f'hall {statistic[i]["hall"]}'):
+            statistic_vals[f'hall {statistic[i]["hall"]}']['count'] += 1
+            statistic_vals[f'hall {statistic[i]["hall"]}']['sumTickets'] += statistic[i]['spend money']
+            # statistic_vals[f'hall {statistic[i]["hall"]}']['sumFilmLEngth'] += statistic[i]
+        else:
+            statistic_vals[f'hall {statistic[i]["hall"]}'] = dict()
+            statistic_vals[f'hall {statistic[i]["hall"]}']['count'] = 0
+            statistic_vals[f'hall {statistic[i]["hall"]}']['sumTickets'] = 0
+
+print(len(statistic))
+print(statistic_vals)
 
