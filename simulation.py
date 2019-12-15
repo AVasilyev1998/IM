@@ -15,6 +15,7 @@ class ClientSim(object):
         self.env = env
         self.schedule = schedule
         self.available_sessions = []
+        self.client.statistics['went to cinema'] = self.env.now
 
     def run(self):
         if len(food_shop.queue) // 2 < len(ticket_shop.queue):  # TODO: передать ticket и food кассы в класс при инициализации
@@ -36,7 +37,7 @@ class ClientSim(object):
 
     def get_available_sessions(self) -> list:
         now = self.new_now(self.env.now)
-        self.client.statistics['coming time'] = now
+        # self.client.statistics['coming time'] = now
         now_minus_30min = now - datetime.timedelta(minutes=30)
         now_plus_1hour = now + datetime.timedelta(hours=1)
         sessions = []
@@ -76,7 +77,7 @@ class ClientSim(object):
             self.client.statistics['film'] = choiced_session.film_name
             self.client.statistics['hall']['capacity'] = choiced_session.capacity
             self.client.statistics['hall']['name'] = choiced_session.hall_name
-            self.client.statistics['ticket buying time'] = now
+            self.client.statistics['ticket buying time'] = self.env.now
             self.client.statistics['session begining time'] = choiced_session.start_time
             self.client.statistics['spend money'] = choiced_session.ticket_price +\
                 (self.client.food_preference + self.client.drink_preference)*250

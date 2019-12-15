@@ -10,7 +10,7 @@ def get_statistics():
 
 
 def take_films_halls_statistics(statistic: dict) -> dict:
-    statistic_vals = {'films': {}, 'halls': {}}
+    statistic_vals = {'films': {}, 'halls': {}, 'average time in queue': 0}
     for i in range(len(statistic)):
         #  amount of gone people
         if statistic[i]['film'] is None and statistic[i]['hall'] is None:
@@ -18,6 +18,9 @@ def take_films_halls_statistics(statistic: dict) -> dict:
         # amount of bought food
         if statistic[i]['bought snacks'] is True:
             statistic_vals['bought food'] = statistic_vals.setdefault('bought food', 0) + 1
+        # time in queue statistic
+        if statistic[i]['bought ticket']:
+            statistic_vals['average time in queue'] += (statistic[i]['ticket buying time'] - statistic[i]['went to cinema'])
         # halls statistic
         if len(statistic[i]['hall']) > 0:
             name = statistic[i]['hall']['name']
@@ -38,6 +41,7 @@ def take_films_halls_statistics(statistic: dict) -> dict:
                 pop_film = k
                 maximum = v
         statistic_vals['most popular film'] = pop_film if pop_film != 0 else None
+    statistic_vals['average time in queue'] = statistic_vals['average time in queue'] // len(statistic)
     return statistic_vals
 
 
@@ -60,7 +64,8 @@ def bought_tickets_to_film(stat_dict, film_cat='films'):
                    labelcolor='r',  # Цвет подписи
                    left=True)
     plt.minorticks_on()
-    plt.ylabel('Проданные билеты')
+    plt.ylabel('Sold tickets')
+    plt.title('Tickets to films')
     plt.xticks(rotation=75)
     plt.show()
 
@@ -74,7 +79,7 @@ def halls_graphics(stat_dict, hall_cat='halls'):
     plt.pie(y_halls, labels=x_halls, explode=[0.04, 0.04, 0.04, 0.04, 0.04],
             shadow=True, autopct='%1.1f%%')
     plt.xticks(rotation=75)
-    plt.title('Посещение залов')
+    plt.title('Halls visiting')
     plt.show()
 
 
@@ -87,21 +92,36 @@ def halls_profit_by_capacity(stat_dict, capacity_cat='capacity',sum_cat='sumTick
     plt.bar(x_halls, y_halls)
     plt.xticks(rotation=75)
     plt.ylabel('Profit')
+    plt.title('Profit of hall by hall capacity')
     plt.show()
     print(x_halls, y_halls)
 
 
+def time_in_queue(statistics):
+    y_user = []
+    x_user = []
+    for i in range(len(statistics)):
+        if statistics[i]['bought ticket'] is True:
+            y_user.append(int(statistics[i]['ticket buying time'] - statistics[i]['went to cinema']))
+            x_user.append(i)
+    plt.plot(x_user, y_user)
+    plt.xlabel('Client')
+    plt.ylabel('Time in queue')
+    plt.grid(b='on')
+    plt.minorticks_on()
+    plt.title('Dependence betweeen time and number of client')
+    plt.show()
+
+
 if __name__ == '__main__':
     statistic_values = get_statistics()
-    # print([i for i in statistic_values[1].keys()])
-    # print(statistic_values[1]['hall'])
     stat_values = take_films_halls_statistics(statistic_values)
-    # print(stat_values)
-    # bought_tickets_to_film(stat_values)
-    # halls_graphics(stat_values)
+    print(f'Average time in queue: {stat_values["average time in queue"]}\n'
+          f'Most popular film: {stat_values["most popular film"]}')
+    bought_tickets_to_film(stat_values)
+    halls_graphics(stat_values)
     halls_profit_by_capacity(stat_values)
-
-
+    time_in_queue(statistic_values)
 
 
 
