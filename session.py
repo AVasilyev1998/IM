@@ -23,6 +23,7 @@ class Session:
     def __init__(self, hall: CinemaHall, film: Film):
         self.film_name = film.name
         self.hall_name = hall.name
+        self.capacity = hall.capacity
         self.free_sits = hall.capacity
         self.start_time = hall.last_film_end_time + datetime.timedelta(minutes=30)
         self.end_time = hall.last_film_end_time + datetime.timedelta(minutes=film.duration)\

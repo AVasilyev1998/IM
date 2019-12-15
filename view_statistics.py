@@ -19,14 +19,16 @@ def take_films_halls_statistics(statistic: dict) -> dict:
         if statistic[i]['bought snacks'] is True:
             statistic_vals['bought food'] = statistic_vals.setdefault('bought food', 0) + 1
         # halls statistic
-        if statistic[i]['hall'] is not None:
-            if statistic_vals['halls'].get(f'hall {statistic[i]["hall"]}'):
-                statistic_vals['halls'][f'hall {statistic[i]["hall"]}']['count'] += 1
-                statistic_vals['halls'][f'hall {statistic[i]["hall"]}']['sumTickets'] += statistic[i]['spend money']
+        if len(statistic[i]['hall']) > 0:
+            name = statistic[i]['hall']['name']
+            if statistic_vals['halls'].get(name):
+                statistic_vals['halls'][name]['count'] += 1
+                statistic_vals['halls'][name]['sumTickets'] += statistic[i]['spend money']
             else:
-                statistic_vals['halls'][f'hall {statistic[i]["hall"]}'] = dict()
-                statistic_vals['halls'][f'hall {statistic[i]["hall"]}']['count'] = 0
-                statistic_vals['halls'][f'hall {statistic[i]["hall"]}']['sumTickets'] = 0
+                statistic_vals['halls'][name] = dict()
+                statistic_vals['halls'][name]['capacity'] = statistic_vals['halls'][name].setdefault('capacity', statistic[i]['hall']['capacity'])
+                statistic_vals['halls'][name]['count'] = 0
+                statistic_vals['halls'][name]['sumTickets'] = 0
         if statistic[i]['film'] is not None:
             statistic_vals['films'][statistic[i]['film']] = statistic_vals['films'].setdefault(
                 str(statistic[i]['film']), 0) + 1
@@ -76,13 +78,23 @@ def halls_graphics(stat_dict, hall_cat='halls'):
     plt.show()
 
 
+def halls_profit_by_capacity(stat_dict, capacity_cat='capacity', halls_cat='halls'):
+    x_halls = []
+    y_halls = []
+    for k, v in stat_dict[halls_cat].items():
+        x_halls.append(k)
+        print(k, v)
+
+
 if __name__ == '__main__':
     statistic_values = get_statistics()
+    # print([i for i in statistic_values[1].keys()])
+    # print(statistic_values[1]['hall'])
     stat_values = take_films_halls_statistics(statistic_values)
     # print(stat_values)
-    bought_tickets_to_film(stat_values)
-    halls_graphics(stat_values)
-
+    # bought_tickets_to_film(stat_values)
+    # halls_graphics(stat_values)
+    halls_profit_by_capacity(stat_values)
 
 
 

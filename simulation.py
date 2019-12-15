@@ -10,6 +10,7 @@ HALLS_COUNT = 5
 class ClientSim(object):
     def __init__(self, env, films_list: list, schedule: Schedule):
         self.client = Client(films_list)
+        self.client.statistics['hall'] = {}
         self.action = env.process(self.run())
         self.env = env
         self.schedule = schedule
@@ -73,7 +74,8 @@ class ClientSim(object):
                 choiced_session.available = False
             self.client.statistics['bought ticket'] = True
             self.client.statistics['film'] = choiced_session.film_name
-            self.client.statistics['hall'] = choiced_session.hall_name
+            self.client.statistics['hall']['capacity'] = choiced_session.capacity
+            self.client.statistics['hall']['name'] = choiced_session.hall_name
             self.client.statistics['ticket buying time'] = now
             self.client.statistics['session begining time'] = choiced_session.start_time
             self.client.statistics['spend money'] = choiced_session.ticket_price +\
