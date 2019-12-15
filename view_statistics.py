@@ -66,12 +66,14 @@ def bought_tickets_to_film(stat_dict, film_cat='films'):
 def halls_graphics(stat_dict, hall_cat='halls'):
     x_halls = []
     y_halls = []
-    for k,v in stat_dict[hall_cat].items():
+    for k, v in stat_dict[hall_cat].items():
         x_halls.append(k)
         y_halls.append(v['count'])
-        plt.bar(x_halls, y_halls)
-        plt.xticks(rotation=75)
-        plt.show()
+    plt.pie(y_halls, labels=x_halls, explode=[0.04, 0.04, 0.04, 0.04, 0.04],
+            shadow=True, autopct='%1.1f%%')
+    plt.xticks(rotation=75)
+    plt.title('Посещение залов')
+    plt.show()
 
 
 if __name__ == '__main__':
