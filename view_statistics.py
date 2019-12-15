@@ -78,12 +78,17 @@ def halls_graphics(stat_dict, hall_cat='halls'):
     plt.show()
 
 
-def halls_profit_by_capacity(stat_dict, capacity_cat='capacity', halls_cat='halls'):
+def halls_profit_by_capacity(stat_dict, capacity_cat='capacity',sum_cat='sumTickets', halls_cat='halls'):
     x_halls = []
     y_halls = []
     for k, v in stat_dict[halls_cat].items():
-        x_halls.append(k)
-        print(k, v)
+        x_halls.append(f'{k} with capacity: {v[capacity_cat]}')
+        y_halls.append(round(v[sum_cat] / v[capacity_cat], 2))
+    plt.bar(x_halls, y_halls)
+    plt.xticks(rotation=75)
+    plt.ylabel('Profit')
+    plt.show()
+    print(x_halls, y_halls)
 
 
 if __name__ == '__main__':
@@ -95,6 +100,7 @@ if __name__ == '__main__':
     # bought_tickets_to_film(stat_values)
     # halls_graphics(stat_values)
     halls_profit_by_capacity(stat_values)
+
 
 
 
