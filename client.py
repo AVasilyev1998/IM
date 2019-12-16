@@ -29,7 +29,7 @@ class Client(object):
                 self.food_preference + randint(0, 10000000))
         self.statistics = {
             'id': self.id,
-            'coming time': None,
+            'went to cinema': None,
             'bought ticket': False,
             'bought snacks': False, 
             'ticket buying time': None,

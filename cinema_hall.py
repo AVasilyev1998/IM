@@ -19,7 +19,6 @@ class CinemaHall(object):
             self.last_film_end_time = last_film_end_time
             self.name = name
             self.capacity = capacity
-            # self.statistics = {}  # для сбора статистики по залу (возможно не понадобится)
         else:
             raise TypeError
 
