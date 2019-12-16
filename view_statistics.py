@@ -103,17 +103,34 @@ def time_in_queue(statistics):
         if statistics[i]['bought ticket'] is True:
             y_user.append(int(statistics[i]['ticket buying time'] - statistics[i]['went to cinema']))
             x_user.append(i)
-    plt.plot(x_user, y_user)
-    plt.xlabel('Client')
-    plt.ylabel('Time in queue')
-    plt.grid(b='on')
-    plt.minorticks_on()
-    plt.title('Dependence betweeen time and number of client')
+    # plt.plot(x_user, y_user)
+    # plt.xlabel('Client')
+    # plt.ylabel('Time in queue')
+    # plt.grid(b='on')
+    # plt.minorticks_on()
+    # plt.title('Dependence betweeen time and number of client')
+    # plt.show()
+    fig, ax = plt.subplots()
+
+    ax.scatter(x_user, y_user,
+               c='b')
+
+    ax.set_facecolor('white')  # цвет области Axes
+    ax.set_title('Время в очереди')  # заголовок для Axes
+
+    fig.set_figwidth(8)  # ширина и
+    fig.set_figheight(8)
     plt.show()
 
 
 if __name__ == '__main__':
     statistic_values = get_statistics()
+    print(statistic_values[1200])
+    gone = 0
+    for i in statistic_values:
+        if i['bought ticket'] is False:
+            gone += 1
+    print(f'gone: {gone}')
     stat_values = take_films_halls_statistics(statistic_values)
     print(f'Average time in queue: {stat_values["average time in queue"]}\n'
           f'Most popular film: {stat_values["most popular film"]}')
