@@ -99,7 +99,7 @@ def halls_profit_by_capacity(stat_dict, capacity_cat='capacity',sum_cat='sumTick
     plt.ylabel('Profit')
     plt.title('Profit of hall by hall capacity')
     plt.show()
-    print(x_halls, y_halls)
+    # print(x_halls, y_halls)
 
 
 def time_in_queue(statistics):
@@ -122,7 +122,7 @@ def time_in_queue(statistics):
                c='b')
 
     ax.set_facecolor('white')  # цвет области Axes
-    ax.set_title('Время в очереди')  # заголовок для Axes
+    ax.set_title('Time in queue')  # заголовок для Axes
 
     fig.set_figwidth(8)  # ширина и
     fig.set_figheight(8)
@@ -140,11 +140,10 @@ def free_sits_on_session(statistics):
             # print(ses)
             halls_x.append(f'{ses.start_time} | hall {name} | capacity: {ses.capacity}')
             halls_y.append(ses.free_sits)
-    # print(halls_x, halls_y)
-
     fig = plt.figure(figsize=(8, 6))
     plt.bar(halls_x, halls_y)
     plt.xticks(rotation=90)
+    plt.ylabel('Free sits')
     plt.title('Free sits on sessions')
     plt.show()
 
@@ -152,11 +151,12 @@ def free_sits_on_session(statistics):
 if __name__ == '__main__':
     statistic_values = get_statistics()
     stat_values = take_films_halls_statistics(statistic_values)
-    print(stat_values)
+    # print(stat_values)
     print(f'Average time in queue: {stat_values["average time in queue"]}\n'
           f'Most popular film: {stat_values["most popular film"]}\n'
           f'Amount of clients: {int(stat_values["clients amount"])}\n'
-          f'Revenue per day: {stat_values["revenue"]}')
+          f'Revenue per day: {stat_values["revenue"]}\n'
+          f'Gone clients: {stat_values["gone"]}')
     bought_tickets_to_film(stat_values)
     halls_graphics(stat_values)
     halls_profit_by_capacity(stat_values)
