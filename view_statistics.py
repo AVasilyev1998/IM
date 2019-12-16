@@ -157,10 +157,10 @@ if __name__ == '__main__':
           f'Most popular film: {stat_values["most popular film"]}\n'
           f'Amount of clients: {int(stat_values["clients amount"])}\n'
           f'Revenue per day: {stat_values["revenue"]}')
-    # bought_tickets_to_film(stat_values)
-    # halls_graphics(stat_values)
-    # halls_profit_by_capacity(stat_values)
-    # time_in_queue(statistic_values)
+    bought_tickets_to_film(stat_values)
+    halls_graphics(stat_values)
+    halls_profit_by_capacity(stat_values)
+    time_in_queue(statistic_values)
     free_sits_on_session(statistic_values)
 
 
