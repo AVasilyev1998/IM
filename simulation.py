@@ -15,7 +15,6 @@ class ClientSim(object):
         self.env = env
         self.schedule = schedule
         self.available_sessions = []
-        self.client.statistics['went to cinema'] = self.env.now
 
     def run(self):
         if len(food_shop.queue) // 2 < len(ticket_shop.queue):  # TODO: передать ticket и food кассы в класс при инициализации
@@ -23,10 +22,12 @@ class ClientSim(object):
                 with food_shop.request() as req:
                     yield req
                     yield self.env.process(self.buy_snacks())
+            self.client.statistics['went to cinema'] = self.env.now
             with ticket_shop.request() as req:
                 yield req
                 yield self.env.process(self.buy_ticket())
         else:
+            self.client.statistics['went to cinema'] = self.env.now
             with ticket_shop.request() as req:
                 yield req
                 yield self.env.process(self.buy_ticket())
