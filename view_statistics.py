@@ -10,13 +10,15 @@ def get_statistics():
 
 
 def take_films_halls_statistics(statistic: dict) -> dict:
-    statistic_vals = {'films': {}, 'halls': {}, 'average time in queue': 0, 'clients amount': 0, 'revenue': 0}
+    statistic_vals = {'films': {}, 'halls': {}, 'average time in queue': 0, 'clients amount': 0, 'revenue': 0, 'gone': 0}
     for i in range(len(statistic)):
         # revenue and clients amount
         if statistic[i]['bought ticket']:
             statistic_vals["revenue"] += statistic[i]['spend money']
             statistic_vals['clients amount'] += 1
-        #  amount of gone people
+        else:
+            statistic_vals['gone'] += 1
+            #  amount of gone people
         if statistic[i]['film'] is None and statistic[i]['hall'] is None:
             statistic_vals['gone'] = statistic_vals.setdefault('gone', 0) + 1
         # amount of bought food
@@ -127,15 +129,30 @@ def time_in_queue(statistics):
     plt.show()
 
 
+def free_sits_on_session(statistics):
+    halls = statistics[0]['schedule'].queues
+    halls_x = []
+    halls_y = []
+    for hall in halls:
+        name = hall[0].hall_name
+
+        for ses in hall:
+            # print(ses)
+            halls_x.append(f'{ses.start_time} | hall {name} | capacity: {ses.capacity}')
+            halls_y.append(ses.free_sits)
+    # print(halls_x, halls_y)
+
+    fig = plt.figure(figsize=(8, 6))
+    plt.bar(halls_x, halls_y)
+    plt.xticks(rotation=90)
+    plt.title('Free sits on sessions')
+    plt.show()
+
+
 if __name__ == '__main__':
     statistic_values = get_statistics()
-    print(statistic_values[200])  # TODO: comment this before commit
-    gone = 0
-    for i in statistic_values:
-        if i['bought ticket'] is False:
-            gone += 1
-    print(f'gone: {gone}')
     stat_values = take_films_halls_statistics(statistic_values)
+    print(stat_values)
     print(f'Average time in queue: {stat_values["average time in queue"]}\n'
           f'Most popular film: {stat_values["most popular film"]}\n'
           f'Amount of clients: {int(stat_values["clients amount"])}\n'
@@ -144,7 +161,7 @@ if __name__ == '__main__':
     # halls_graphics(stat_values)
     # halls_profit_by_capacity(stat_values)
     # time_in_queue(statistic_values)
-
+    free_sits_on_session(statistic_values)
 
 
 

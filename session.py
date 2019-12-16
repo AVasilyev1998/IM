@@ -35,7 +35,7 @@ class Session:
         # не нравится мне эта реализация, но лень менять, поэтому ок)))
         return f'hall: {self.hall_name} | ' \
                 f'film: {self.film_name} | starts at: {self.start_time.strftime("%H:%M")} | ends at: {self.end_time.time().strftime("%H:%M")} | ' \
-                f'price: {self.ticket_price}'
+                f'price: {self.ticket_price} | free sits: {self.free_sits}'
 
 
 if __name__ == "__main__":

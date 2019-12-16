@@ -7,6 +7,7 @@ import datetime
 FILMS_COUNT = 7
 HALLS_COUNT = 5
 
+
 class ClientSim(object):
     def __init__(self, env, films_list: list, schedule: Schedule):
         self.client = Client(films_list)
@@ -14,7 +15,9 @@ class ClientSim(object):
         self.action = env.process(self.run())
         self.env = env
         self.schedule = schedule
+        self.client.statistics['schedule'] = schedule
         self.available_sessions = []
+
 
     def run(self):
         if len(food_shop.queue) // 2 < len(ticket_shop.queue):  # TODO: передать ticket и food кассы в класс при инициализации
@@ -69,22 +72,23 @@ class ClientSim(object):
         # TODO: когда кончаются билеты удалить сессию из расписания (сделать недоступной)
         now = self.new_now(self.env.now)
         self.available_sessions = self.get_available_sessions()
-        choiced_session = self.choise_session()
-        if choiced_session is not None:
-            choiced_session.free_sits -= 1
-            if choiced_session.free_sits == 0:
-                choiced_session.available = False
+        self.chosen_session = self.choise_session()
+        # self.client.statistics['session'] = self.chosen_session
+        if self.chosen_session is not None:
+            self.chosen_session.free_sits -= 1
+            if self.chosen_session.free_sits == 0:
+                self.chosen_session.available = False
             self.client.statistics['bought ticket'] = True
-            self.client.statistics['film'] = choiced_session.film_name
-            self.client.statistics['hall']['capacity'] = choiced_session.capacity
-            self.client.statistics['hall']['name'] = choiced_session.hall_name
+            self.client.statistics['film'] = self.chosen_session.film_name
+            self.client.statistics['hall']['capacity'] = self.chosen_session.capacity
+            self.client.statistics['hall']['name'] = self.chosen_session.hall_name
             self.client.statistics['ticket buying time'] = self.env.now
-            self.client.statistics['session begining time'] = choiced_session.start_time
-            self.client.statistics['spend money'] = choiced_session.ticket_price +\
+            self.client.statistics['session begining time'] = self.chosen_session.start_time
+            self.client.statistics['spend money'] = self.chosen_session.ticket_price +\
                 (self.client.food_preference + self.client.drink_preference)*250
             print(f'{self.client.id} bought ticket at {now}')
-            print(f'на фильм {choiced_session.film_name} осталось'
-                f' {choiced_session.free_sits} билетов'
+            print(f'на фильм {self.chosen_session.film_name} осталось'
+                f' {self.chosen_session.free_sits} билетов'
                 )
             yield self.env.timeout(0.5)
         else:
