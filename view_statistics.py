@@ -60,7 +60,6 @@ def bought_tickets_to_film(stat_dict, film_cat='films'):
                    width=1,  # Ширина делений
                    color='m',  # Цвет делений
                    pad=10,  # Расстояние между черточкой и ее подписью
-                   labelsize=15,  # Размер подписи
                    labelcolor='r',  # Цвет подписи
                    left=True)
     plt.minorticks_on()
