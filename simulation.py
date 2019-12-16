@@ -7,6 +7,9 @@ from random import randint
 
 FILMS_COUNT = 7
 HALLS_COUNT = 5
+CLIENT_GEN_TIMEOUT = 0.5
+TICKET_SHOP_CAPACITY = 3
+FOOD_SHOP_CAPACITY = 2
 
 
 class ClientSim(object):
@@ -114,15 +117,15 @@ films_for_choice = daily_schedule.films_list
 
 
 env = simpy.Environment()
-ticket_shop = simpy.Resource(env, capacity=3)
-food_shop = simpy.Resource(env, capacity=2)
+ticket_shop = simpy.Resource(env, capacity=TICKET_SHOP_CAPACITY)
+food_shop = simpy.Resource(env, capacity=FOOD_SHOP_CAPACITY)
 
 clients = []
 def client_creating(env, clients):
     for i in range(3500):
         client = ClientSim(env, films_for_choice, daily_schedule)
         clients.append(client)
-        yield env.timeout(0.5)
+        yield env.timeout(CLIENT_GEN_TIMEOUT)
 env.process(client_creating(env, clients))
 env.run(until=990)
 
