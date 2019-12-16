@@ -20,8 +20,8 @@ class ClientSim(object):
         self.available_sessions = []
         
 
+
     def run(self):
-        print(len(ticket_shop.queue), len(food_shop.queue))
         if len(ticket_shop.queue) *1.5 <= len(food_shop.queue):  # TODO: передать ticket и food кассы в класс при инициализации
             with ticket_shop.request() as req:
                 self.client.statistics['went to cinema'] = self.env.now

@@ -23,6 +23,7 @@ class Session:
     def __init__(self, hall: CinemaHall, film: Film):
         self.film_name = film.name
         self.hall_name = hall.name
+        self.capacity = hall.capacity
         self.free_sits = hall.capacity
         self.start_time = hall.last_film_end_time + datetime.timedelta(minutes=30)
         self.end_time = hall.last_film_end_time + datetime.timedelta(minutes=film.duration)\
@@ -34,7 +35,7 @@ class Session:
         # не нравится мне эта реализация, но лень менять, поэтому ок)))
         return f'hall: {self.hall_name} | ' \
                 f'film: {self.film_name} | starts at: {self.start_time.strftime("%H:%M")} | ends at: {self.end_time.time().strftime("%H:%M")} | ' \
-                f'price: {self.ticket_price}'
+                f'price: {self.ticket_price} | free sits: {self.free_sits}'
 
 
 if __name__ == "__main__":
