@@ -80,13 +80,19 @@ def halls_graphics(stat_dict, hall_cat='halls'):
     y_halls = []
     for k, v in stat_dict[hall_cat].items():
         x_halls.append(k)
-        y_halls.append(v['count'])
-    plt.pie(y_halls, labels=x_halls, explode=[0.04, 0.04, 0.04, 0.04, 0.04],
+        y_halls.append(round(v['count'], 2))
+    explode = [ 0.04 for i in range(len(stat_dict[hall_cat].items()))]
+    plt.pie(y_halls, labels=x_halls, explode=explode,
             shadow=True, autopct='%1.1f%%')
     plt.xticks(rotation=75)
     plt.title('Halls visiting')
     plt.show()
-
+    print(y_halls)
+    print(x_halls)
+    sum = 0
+    for i in y_halls:
+        sum += i
+    print( y_halls[0] / sum * 100)
 
 def halls_profit_by_capacity(stat_dict, capacity_cat='capacity',sum_cat='sumTickets', halls_cat='halls'):
     x_halls = []
@@ -124,7 +130,7 @@ def time_in_queue(statistics):
     ax.set_facecolor('white')  # цвет области Axes
     ax.set_title('Time in queue')  # заголовок для Axes
 
-    fig.set_figwidth(8)  # ширина и
+    fig.set_figwidth(8)
     fig.set_figheight(8)
     plt.show()
 
